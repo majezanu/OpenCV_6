@@ -42,7 +42,19 @@ public:
 	Mat lapFilterSCaled();
 	Mat sumLap(Mat lap);
 	Mat fuzzyFilter(int _vd, int _vg, int _vb);
+	Mat LowHighPassFilter(int filter_type,int d0);
+	Mat LaplacianFreq();
 	
+	Mat GenGaussianFilter(Mat complexPad, int D0);
+	Mat GenIdealFilter(Mat complexPad, int D0);
+	Mat GenButterworthFilter(Mat complexPad, int D0, int order);
+	Mat GenHighIdealFilter(Mat complexPad, int D0);
+	Mat GenHighButterworthFilter(Mat complexPad, int D0, int order);
+	Mat GenHighGaussianFilter(Mat complexPad, int D0);
+	Mat GenLaplacianFreq(Mat complexPad);
+	Mat FourierTransform();
+
+
 	int computeContrast(int point, int r1, int s1, int r2, int s2);
 	float calcMean(Mat _src);
 	double calcVar(Mat _src);

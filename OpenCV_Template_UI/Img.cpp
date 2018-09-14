@@ -302,6 +302,284 @@ Mat Img::fuzzyFilter(int _vd, int _vg, int _vb) {
 	
 	return _dst;
 }
+//Aquí se le pasa el tipo del filtro donde 1 es el ideal, 2 es el butterwort y 3 es el gausiano.
+//4 es el ideal pasa altas, 5 es el butterwort pasa altas, 6 es el gausiano pasa altas(filter_type)
+//También se le pasa el radio para el filtro D0
+Mat Img::LowHighPassFilter(int filter_type,int D0) 
+{
+	Mat src_gray, src_grayF, dst;
+	Mat src_padded;
+	Mat ILPF;
+	Mat complexPad;
+
+	cvtColor(mMat, src_gray, COLOR_BGR2GRAY);
+	src_gray.convertTo(src_grayF, CV_32F);
+
+	copyMakeBorder(src_grayF, src_padded, 0, src_grayF.rows, 0, src_grayF.cols, BORDER_CONSTANT, Scalar::all(0));
+	for (int i = 0; i < src_padded.rows; i++) {
+		for (int j = 0; j < src_padded.cols; j++) {
+			src_padded.at<float>(i, j) = (float)(src_padded.at<float>(i, j)*pow(-1, (i + j)));
+		}
+	}
+	Mat planes[] = { Mat_<float>(src_padded), Mat::zeros(src_padded.size(), CV_32F) };
+
+	merge(planes, 2, complexPad);
+	dft(complexPad, complexPad, DFT_COMPLEX_OUTPUT);
+	switch (filter_type)
+	{
+	case 1:
+		ILPF = GenIdealFilter(complexPad, D0);
+		break;
+	case 2:
+		ILPF = GenButterworthFilter(complexPad, D0, 2);
+		break;
+	case 3:
+		ILPF = GenGaussianFilter(complexPad, D0);
+		break;
+	case 4:
+		ILPF = GenHighIdealFilter(complexPad, D0);
+		break;
+	case 5:
+		ILPF = GenHighButterworthFilter(complexPad, D0, 2);
+		break;
+	case 6:
+		ILPF = GenHighGaussianFilter(complexPad, D0);
+		break;
+	default:
+		break;
+	}
+	
+	Mat complexMasked;
+	complexMasked = complexPad.mul(ILPF);
+
+	dft(complexMasked, dst, DFT_INVERSE | DFT_REAL_OUTPUT | DFT_SCALE);
+
+
+	for (int i = 0; i < dst.rows; i++) {
+		for (int j = 0; j < dst.cols; j++) {
+			dst.at<float>(i, j) = (float)(dst.at<float>(i, j)*pow(-1, (i + j)));
+		}
+	}
+	dst.convertTo(dst, CV_8U);
+	//convertScaleAbs(dst, dst);
+	normalize(dst, dst, 0, 255, CV_MINMAX);
+
+
+	// 6) Extracting M x N image
+	Mat q0(dst, Rect(0, 0, src_grayF.cols, src_grayF.rows));
+	cvtColor(q0, q0, COLOR_GRAY2BGR);
+	return q0;
+}
+Mat Img::LaplacianFreq()
+{
+	Mat src_gray, src_grayF, dst;
+	Mat src_padded;
+	Mat LapH;
+	Mat complexPad;
+
+	cvtColor(mMat, src_gray, COLOR_BGR2GRAY);
+	src_gray.convertTo(src_grayF, CV_32F);
+
+	normalize(src_grayF, src_grayF, 1.0, 0, NORM_MINMAX);
+	copyMakeBorder(src_grayF, src_padded, 0, src_grayF.rows, 0, src_grayF.cols, BORDER_CONSTANT, Scalar::all(0));
+	
+	for (int i = 0; i < src_padded.rows; i++) {
+		for (int j = 0; j < src_padded.cols; j++) {
+			src_padded.at<float>(i, j) = (float)(src_padded.at<float>(i, j)*pow(-1, (i + j)));
+		}
+	}
+
+	Mat planes[] = { Mat_<float>(src_padded), Mat::zeros(src_padded.size(), CV_32F) };
+
+	merge(planes, 2, complexPad);
+	dft(complexPad, complexPad, DFT_COMPLEX_OUTPUT);
+
+	LapH = GenLaplacianFreq(complexPad);
+	Mat complexMasked;
+	complexMasked = LapH.mul(complexPad);
+
+	dft(complexMasked, dst, DFT_INVERSE | DFT_REAL_OUTPUT);
+	double min = 0;
+	double max = 0;
+	minMaxLoc(dst, &min, &max);
+	//Dividing Laplacian by it's maximum value as described on eq. 4.9-8
+	dst = dst / max;
+	dst = src_padded - dst;
+
+	for (int i = 0; i < dst.rows; i++) {
+		for (int j = 0; j < dst.cols; j++) {
+			dst.at<float>(i, j) = (float)(dst.at<float>(i, j)*pow(-1, (i + j)));
+		}
+	}
+	//dst.convertTo(dst, CV_8U);
+	//convertScaleAbs(dst, dst);
+	
+	
+	Mat q0(dst, Rect(0, 0, src_grayF.cols, src_grayF.rows));
+	//
+convertScaleAbs(q0, q0);
+	normalize(q0, q0, 0, 255, CV_MINMAX);
+	q0.convertTo(q0, CV_8U);
+	cvtColor(q0, q0, COLOR_GRAY2BGR);
+	return q0;
+}
+Mat Img::FourierTransform()
+{
+	cvtColor(mMat, mMat, COLOR_BGR2GRAY);
+	
+	Mat padded;
+	int m = getOptimalDFTSize(mMat.rows);
+	int n = getOptimalDFTSize(mMat.cols);
+	copyMakeBorder(mMat, padded, 0, m - mMat.rows, 0, n - mMat.cols, BORDER_CONSTANT, Scalar::all(0));
+	Mat planes[] = { Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F) };
+	Mat complexI;
+	merge(planes, 2, complexI);
+	dft(complexI, complexI);
+	split(complexI, planes);
+	magnitude(planes[0], planes[1], planes[0]);
+	Mat magI = planes[0];
+	magI += Scalar::all(1);
+	log(magI, magI);
+	magI = magI(Rect(0, 0, magI.cols & -2, magI.rows & -2));
+	int cx = magI.cols / 2;
+	int cy = magI.rows / 2;
+	Mat q0(magI, Rect(0, 0, cx, cy));
+	Mat q1(magI, Rect(cx, 0, cx, cy));
+	Mat q2(magI, Rect(0, cy, cx, cy));
+	Mat q3(magI, Rect(cx, cy, cx, cy));
+	Mat tmp;
+	q0.copyTo(tmp);
+	q3.copyTo(q0);
+	tmp.copyTo(q3);
+	q1.copyTo(tmp);
+	q2.copyTo(q1);
+	tmp.copyTo(q2);
+	normalize(magI, magI, 0, 1, CV_MINMAX);
+	magI.convertTo(magI, CV_8U);
+	cvtColor(magI, magI, COLOR_GRAY2BGR);
+	return magI;
+	
+}
+
+Mat Img::GenIdealFilter(Mat complexPad, int D0) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows - 1;
+	int Q = aux.cols - 1;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - P / 2), 2) + pow(v - Q / 2, 2));
+			aux.at<float>(u, v) = (Duv <= D0 ? 1 : 0);
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenButterworthFilter(Mat complexPad,int D0, int order) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = 1 / (1 + powf(Duv / D0, 2 * order));
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenGaussianFilter(Mat complexPad,int D0) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = expf((-1 * powf(Duv, 2)) / (2 * powf(D0, 2)));
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenHighIdealFilter(Mat complexPad,int D0) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = (Duv <= D0 ? 0 : 1);
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenHighButterworthFilter(Mat complexPad,int D0, int order) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = 1 / (1 + powf(D0 / Duv, 2 * order));
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenHighGaussianFilter(Mat complexPad, int D0) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < Q; u++) {
+		for (int v = 0; v < P; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = 1 - expf((-1 * powf(Duv, 2)) / (2 * powf(D0, 2)));
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
+Mat Img::GenLaplacianFreq(Mat complexPad) {
+	Mat aux = Mat::zeros(complexPad.size(), CV_32F);
+	int P = aux.rows;
+	int Q = aux.cols;
+	for (int u = 0; u < P; u++) {
+		for (int v = 0; v < Q; v++) {
+			float Duv = (float)sqrt(pow((u - (P - 1) / 2), 2) + pow(v - (Q - 1) / 2, 2));
+			aux.at<float>(u, v) = -4 * powf(CV_PI, 2)*powf(Duv, 2);
+		}
+	}
+
+	Mat planes2[] = { Mat_<float>(aux), Mat_<float>(aux) };
+	Mat aux2;
+	merge(planes2, 2, aux2);
+
+	return aux2;
+}
 
 int Img::computeContrast(int point, int r1, int s1, int r2, int s2)
 {
@@ -333,6 +611,7 @@ double Img::calcVar(Mat _src, float _mean) {
 	pow(temp1 - _mean, 2, temp1);
 	return (double)sum(temp1)[0] / temp1.total();
 }
+
 
 float Img::triangularMembership(float z, float a, float b, float c) 
 { 

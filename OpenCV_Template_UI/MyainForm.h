@@ -9,6 +9,10 @@
 #include "NonlinearFilter.h"
 #include "LaplacianForm.h"
 #include "FuzzyFilterForm.h"
+#include "LowPassFilter.h"
+#include "HighPassFilter.h"
+#include "LaplacianFreq.h"
+#include "FourierTransform.h"
 #include "About.h"
 
 namespace OpenCVTemplateUI {
@@ -87,6 +91,12 @@ namespace OpenCVTemplateUI {
 	private: System::Windows::Forms::ToolStripMenuItem^  medianFilterToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  laplacianToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  fuzzyFilterToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  fourierToolStripMenuItem;
+
+	private: System::Windows::Forms::ToolStripMenuItem^  butterwortLowPassToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  highPassFilterToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  laplacianFreqToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  fourierToolStripMenuItem1;
 
 
 
@@ -127,15 +137,21 @@ namespace OpenCVTemplateUI {
 					this->medianFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 					this->laplacianToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 					this->fuzzyFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+					this->fourierToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+					this->butterwortLowPassToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+					this->highPassFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+					this->laplacianFreqToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 					this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+					this->fourierToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 					this->menuStrip1->SuspendLayout();
 					this->SuspendLayout();
 					// 
 					// menuStrip1
 					// 
-					this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+					this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {
 						this->negativeTransformationToolStripMenuItem,
-							this->histogramProcessingToolStripMenuItem, this->spatialFilteringToolStripMenuItem, this->fuzzyFilterToolStripMenuItem, this->aboutToolStripMenuItem
+							this->histogramProcessingToolStripMenuItem, this->spatialFilteringToolStripMenuItem, this->fuzzyFilterToolStripMenuItem, this->fourierToolStripMenuItem,
+							this->laplacianFreqToolStripMenuItem, this->aboutToolStripMenuItem
 					});
 					this->menuStrip1->Location = System::Drawing::Point(0, 0);
 					this->menuStrip1->Name = L"menuStrip1";
@@ -294,12 +310,50 @@ namespace OpenCVTemplateUI {
 					this->fuzzyFilterToolStripMenuItem->Text = L"Fuzzy Filter";
 					this->fuzzyFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyainForm::fuzzyFilterToolStripMenuItem_Click);
 					// 
+					// fourierToolStripMenuItem
+					// 
+					this->fourierToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+						this->butterwortLowPassToolStripMenuItem,
+							this->highPassFilterToolStripMenuItem, this->fourierToolStripMenuItem1
+					});
+					this->fourierToolStripMenuItem->Name = L"fourierToolStripMenuItem";
+					this->fourierToolStripMenuItem->Size = System::Drawing::Size(56, 20);
+					this->fourierToolStripMenuItem->Text = L"Fourier";
+					// 
+					// butterwortLowPassToolStripMenuItem
+					// 
+					this->butterwortLowPassToolStripMenuItem->Name = L"butterwortLowPassToolStripMenuItem";
+					this->butterwortLowPassToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+					this->butterwortLowPassToolStripMenuItem->Text = L"Low Pass Filter";
+					this->butterwortLowPassToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyainForm::butterwortLowPassToolStripMenuItem_Click);
+					// 
+					// highPassFilterToolStripMenuItem
+					// 
+					this->highPassFilterToolStripMenuItem->Name = L"highPassFilterToolStripMenuItem";
+					this->highPassFilterToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+					this->highPassFilterToolStripMenuItem->Text = L"High Pass Filter";
+					this->highPassFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyainForm::highPassFilterToolStripMenuItem_Click);
+					// 
+					// laplacianFreqToolStripMenuItem
+					// 
+					this->laplacianFreqToolStripMenuItem->Name = L"laplacianFreqToolStripMenuItem";
+					this->laplacianFreqToolStripMenuItem->Size = System::Drawing::Size(95, 20);
+					this->laplacianFreqToolStripMenuItem->Text = L"Laplacian Freq";
+					this->laplacianFreqToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyainForm::laplacianFreqToolStripMenuItem_Click);
+					// 
 					// aboutToolStripMenuItem
 					// 
 					this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
 					this->aboutToolStripMenuItem->Size = System::Drawing::Size(52, 20);
 					this->aboutToolStripMenuItem->Text = L"About";
 					this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyainForm::aboutToolStripMenuItem_Click);
+					// 
+					// fourierToolStripMenuItem1
+					// 
+					this->fourierToolStripMenuItem1->Name = L"fourierToolStripMenuItem1";
+					this->fourierToolStripMenuItem1->Size = System::Drawing::Size(180, 22);
+					this->fourierToolStripMenuItem1->Text = L"Fourier";
+					this->fourierToolStripMenuItem1->Click += gcnew System::EventHandler(this, &MyainForm::fourierToolStripMenuItem1_Click);
 					// 
 					// MyainForm
 					// 
@@ -434,6 +488,43 @@ namespace OpenCVTemplateUI {
 			h->Show();
 			h->Activate();
 		}
+
+		private: System::Void LowPassFilterView()
+		{
+			clearMDI();
+			LowPassFilter^ h = gcnew LowPassFilter();
+			h->MdiParent = this;
+			h->MaximizeBox = true;
+			h->Show();
+			h->Activate();
+		}
+		private: System::Void HighPassFilterView()
+		{
+			clearMDI();
+			HighPassFilter^ h = gcnew HighPassFilter();
+			h->MdiParent = this;
+			h->MaximizeBox = true;
+			h->Show();
+			h->Activate();
+		}
+		private: System::Void LaplacianFreqView()
+		{
+			clearMDI();
+			LaplacianFreq^ h = gcnew LaplacianFreq();
+			h->MdiParent = this;
+			h->MaximizeBox = true;
+			h->Show();
+			h->Activate();
+		}
+		private: System::Void FourierView()
+		{
+			clearMDI();
+			FourierTransform^ h = gcnew FourierTransform();
+			h->MdiParent = this;
+			h->MaximizeBox = true;
+			h->Show();
+			h->Activate();
+		}
 		private: System::Void aboutView()
 		{
 			clearMDI();
@@ -498,6 +589,19 @@ private: System::Void laplacianToolStripMenuItem_Click(System::Object^  sender, 
 }
 private: System::Void fuzzyFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	FuzzyView();
+}
+
+private: System::Void butterwortLowPassToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	LowPassFilterView();
+}
+private: System::Void highPassFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	HighPassFilterView();
+}
+private: System::Void laplacianFreqToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	LaplacianFreqView();
+}
+private: System::Void fourierToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e) {
+	FourierView();
 }
 };
 }

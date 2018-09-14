@@ -157,13 +157,17 @@
   <ItemGroup>
     <ClCompile Include="About.cpp" />
     <ClCompile Include="ContrastStretching.cpp" />
+    <ClCompile Include="FourierTransform.cpp" />
     <ClCompile Include="FuzzyFilterForm.cpp" />
+    <ClCompile Include="HighPassFilter.cpp" />
     <ClCompile Include="Histogram.cpp" />
     <ClCompile Include="Img.cpp" />
     <ClCompile Include="IntensityTransForm.cpp" />
     <ClCompile Include="LaplacianForm.cpp" />
+    <ClCompile Include="LaplacianFreq.cpp" />
     <ClCompile Include="LocalHist.cpp" />
     <ClCompile Include="LocalHistogramStatistics.cpp" />
+    <ClCompile Include="LowPassFilter.cpp" />
     <ClCompile Include="MyainForm.cpp" />
     <ClCompile Include="NonlinearFilter.cpp" />
   </ItemGroup>
@@ -174,7 +178,13 @@
     <ClInclude Include="ContrastStretching.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="FourierTransform.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="FuzzyFilterForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="HighPassFilter.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Histogram.h">
@@ -187,10 +197,16 @@
     <ClInclude Include="LaplacianForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="LaplacianFreq.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="LocalHist.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="LocalHistogramStatistics.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="LowPassFilter.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="MyainForm.h">
@@ -219,11 +235,17 @@
     <EmbeddedResource Include="LaplacianForm.resx">
       <DependentUpon>LaplacianForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LaplacianFreq.resx">
+      <DependentUpon>LaplacianFreq.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LocalHist.resx">
       <DependentUpon>LocalHist.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LocalHistogramStatistics.resx">
       <DependentUpon>LocalHistogramStatistics.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LowPassFilter.resx">
+      <DependentUpon>LowPassFilter.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MyainForm.resx">
       <DependentUpon>MyainForm.h</DependentUpon>

@@ -4,8 +4,10 @@
   OpenCVTemplateUI.Histogram.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.IntensityTransForm.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.LaplacianForm.resources - Embedded, ContainedInManifestFile, 
+  OpenCVTemplateUI.LaplacianFreq.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.LocalHist.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.LocalHistogramStatistics.resources - Embedded, ContainedInManifestFile, 
+  OpenCVTemplateUI.LowPassFilter.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.MyainForm.resources - Embedded, ContainedInManifestFile, 
   OpenCVTemplateUI.NonlinearFilter.resources - Embedded, ContainedInManifestFile, 
 ImageRuntimeVersion: v4.0.30319
@@ -29,7 +31,13 @@ Class OpenCVTemplateUI.About: AutoLayout, AnsiClass, Class, Public, BeforeFieldI
 Class OpenCVTemplateUI.ContrastStretching: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class OpenCVTemplateUI.FourierTransform: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class OpenCVTemplateUI.FuzzyFilterForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class OpenCVTemplateUI.HighPassFilter: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class OpenCVTemplateUI.Histogram: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
@@ -41,10 +49,16 @@ Class OpenCVTemplateUI.IntensityTransForm: AutoLayout, AnsiClass, Class, Public,
 Class OpenCVTemplateUI.LaplacianForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class OpenCVTemplateUI.LaplacianFreq: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class OpenCVTemplateUI.LocalHist: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class OpenCVTemplateUI.LocalHistogramStatistics: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class OpenCVTemplateUI.LowPassFilter: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class OpenCVTemplateUI.NonlinearFilter: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit

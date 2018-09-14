@@ -60,7 +60,7 @@ namespace OpenCVTemplateUI {
 	private: System::Windows::Forms::TrackBar^  trackBar3;
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::Label^  label5;
+
 	private: System::Windows::Forms::Label^  label6;
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::Label^  label8;
@@ -92,7 +92,6 @@ namespace OpenCVTemplateUI {
 			this->trackBar3 = (gcnew System::Windows::Forms::TrackBar());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label8 = (gcnew System::Windows::Forms::Label());
@@ -112,6 +111,7 @@ namespace OpenCVTemplateUI {
 			this->label2->Size = System::Drawing::Size(78, 13);
 			this->label2->TabIndex = 12;
 			this->label2->Text = L"Vary Constants";
+			this->label2->Click += gcnew System::EventHandler(this, &IntensityTransForm::label2_Click);
 			// 
 			// trackBar1
 			// 
@@ -138,6 +138,7 @@ namespace OpenCVTemplateUI {
 			this->pictureBox2->Size = System::Drawing::Size(543, 402);
 			this->pictureBox2->TabIndex = 9;
 			this->pictureBox2->TabStop = false;
+			this->pictureBox2->Click += gcnew System::EventHandler(this, &IntensityTransForm::pictureBox2_Click);
 			// 
 			// pictureBox1
 			// 
@@ -147,6 +148,7 @@ namespace OpenCVTemplateUI {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->pictureBox1->TabIndex = 8;
 			this->pictureBox1->TabStop = false;
+			this->pictureBox1->Click += gcnew System::EventHandler(this, &IntensityTransForm::pictureBox1_Click);
 			// 
 			// label1
 			// 
@@ -156,6 +158,7 @@ namespace OpenCVTemplateUI {
 			this->label1->Size = System::Drawing::Size(77, 13);
 			this->label1->TabIndex = 7;
 			this->label1->Text = L"Transformation";
+			this->label1->Click += gcnew System::EventHandler(this, &IntensityTransForm::label1_Click);
 			// 
 			// trackBar3
 			// 
@@ -173,6 +176,7 @@ namespace OpenCVTemplateUI {
 			this->label3->Size = System::Drawing::Size(67, 13);
 			this->label3->TabIndex = 15;
 			this->label3->Text = L"Vary Gamma";
+			this->label3->Click += gcnew System::EventHandler(this, &IntensityTransForm::label3_Click);
 			// 
 			// label4
 			// 
@@ -180,13 +184,6 @@ namespace OpenCVTemplateUI {
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(100, 23);
 			this->label4->TabIndex = 21;
-			// 
-			// label5
-			// 
-			this->label5->Location = System::Drawing::Point(0, 0);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(100, 23);
-			this->label5->TabIndex = 20;
 			// 
 			// label6
 			// 
@@ -196,6 +193,7 @@ namespace OpenCVTemplateUI {
 			this->label6->Size = System::Drawing::Size(10, 13);
 			this->label6->TabIndex = 18;
 			this->label6->Text = L".";
+			this->label6->Click += gcnew System::EventHandler(this, &IntensityTransForm::label6_Click);
 			// 
 			// label7
 			// 
@@ -205,6 +203,7 @@ namespace OpenCVTemplateUI {
 			this->label7->Size = System::Drawing::Size(10, 13);
 			this->label7->TabIndex = 19;
 			this->label7->Text = L".";
+			this->label7->Click += gcnew System::EventHandler(this, &IntensityTransForm::label7_Click);
 			// 
 			// label8
 			// 
@@ -214,6 +213,7 @@ namespace OpenCVTemplateUI {
 			this->label8->Size = System::Drawing::Size(42, 13);
 			this->label8->TabIndex = 22;
 			this->label8->Text = L"Original";
+			this->label8->Click += gcnew System::EventHandler(this, &IntensityTransForm::label8_Click);
 			// 
 			// label9
 			// 
@@ -223,6 +223,7 @@ namespace OpenCVTemplateUI {
 			this->label9->Size = System::Drawing::Size(66, 13);
 			this->label9->TabIndex = 23;
 			this->label9->Text = L"Transformed";
+			this->label9->Click += gcnew System::EventHandler(this, &IntensityTransForm::label9_Click);
 			// 
 			// button2
 			// 
@@ -245,7 +246,6 @@ namespace OpenCVTemplateUI {
 			this->Controls->Add(this->label8);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
-			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->trackBar3);
@@ -444,6 +444,24 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 	}
 	button2->Enabled = false;
 
+}
+private: System::Void label9_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label8_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label7_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label6_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label3_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label2_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void pictureBox2_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void pictureBox1_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }
